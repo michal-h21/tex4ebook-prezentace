@@ -1,0 +1,6 @@
+Make:add("biber","biber ${input}")
+Make:htlatex {}
+Make:biber {}
+Make:htlatex {}
+Make:image("png$",                                                          
+    "dvipng -bg Transparent -T tight -o ${output}  -pp ${page} ${source}")

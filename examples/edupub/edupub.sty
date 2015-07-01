@@ -1,0 +1,16 @@
+\ProvidesPackage{edupub}
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+\newbool{teacher}
+\boolfalse{teacher}
+
+\newcommand\teacherinfo[1]{}
+\DeclareVoidOption{teacher}{%
+\renewcommand\teacherinfo[1]{%
+  \edupub@print@teacherinfo{##1}
+}
+\booltrue{teacher}
+}
+
+\newcommand\edupub@print@teacherinfo[1]{#1}
+\ProcessKeyvalOptions*

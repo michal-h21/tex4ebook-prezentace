@@ -1,0 +1,16 @@
+\ifbool{teacher}{
+\Configure{OpfMetadata}{\HCode{<dc:type>teacher-edition</dc:type>}}
+}{
+
+}
+
+\NewConfigure{teacherinfo}{2}
+
+\let\old:teacherinfo\edupub@print@teacherinfo
+\renewcommand\edupub@print@teacherinfo[1]{
+\a:teacherinfo
+\old:teacherinfo{#1}
+\b:teacherinfo
+}
+
+\Configure{teacherinfo}{\HCode{<span epub:type="answer">}}{\HCode{</span>}}
