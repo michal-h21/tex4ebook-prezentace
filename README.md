@@ -12,3 +12,4 @@
 - [Menestrello](http://www.readbeyond.it/menestrello/)
 - [Readium SDK](http://readium.github.io/)
 - [Calzone](https://github.com/michal-h21/calzone) ([Originální verze](https://github.com/michal-h21/calzone))
+- [helpers4ht](https://github.com/michal-h21/helpers4ht)

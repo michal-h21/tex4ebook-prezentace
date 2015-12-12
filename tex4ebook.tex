@@ -5,6 +5,9 @@
 \usepackage{babel}
 \newtheorem{priklad}{Příklad}
 \newtheorem{pozor}{Pozor!}
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}{}
+\addtobeamertemplate{block end}{\vspace*{-1em}}{}
+
 
 \newcommand\myfig[3][width=.9\textwidth]{%
   \figure\includegraphics[#1]{#2}%
@@ -116,7 +119,8 @@
   \item Adobe Digital Editions
   \item Android - Gitden
   \item Azardi
-  \item Menastrello
+  \item Readium SDK
+  \item Menestrello
 \end{itemize}
 \end{frame}
 \begin{frame}
@@ -154,7 +158,7 @@
     \item \url{https://www.tug.org/tex4ht/}
     \item původní autor Eitan Gurari (1947--2009)
     \item systém vzniká od poloviny 90. let
-    \item po smrti původního autora se o vývoj starají Karl Berry a CV Radhakrishnan
+    \item po smrti původního autora se o vývoj starají Karl Berry, CV Radhakrishnan a Michal Hoftich
   \end{itemize}
 \end{frame}
 
@@ -173,14 +177,15 @@
   \begin{itemize}
     \item systém se skládá z množství kompilačních skriptů, které se ale liší
       jen v přednastavených hodnotách
-  \item základní skript je htlatex, například pro konverzi do ODT slouží mk4ht oolatex
+  \item základní skript je \texttt{htlatex} 
+  \item například pro konverzi do ODT slouží \texttt{mk4ht oolatex}
   \item kompilace sestává ze tří základních kroků:
 \end{itemize}
 \end{frame}
 \begin{frame}
   \frametitle{kompilace dokumentu TeXem s nahraným souborem tex4ht.sty}
   \begin{itemize}
-    \item pro podporované balíčky jsou nahrané .4ht soubory, které vkládají
+    \item pro podporované balíčky jsou nahrané \texttt{.4ht} soubory, které vkládají
         konfigurovatelné háčky na vhodná místa
     \item po vložení háčků se nahrají jejich konfigurace v závislosti na
         výstupním formátu
@@ -207,7 +212,7 @@
     \item   výstup do CSS souboru
     \item   konverze vložených obrázků z .dvi do výstupního formátu
     \item   zpracování výstupních souborů externími programy 
-    (xslt, tidy, xmllint, xtpipes)
+    (\texttt{xslt}, \texttt{tidy}, \texttt{xmllint}, \texttt{xtpipes})
     \item   kopírování souborů do cílového adresáře
   \end{itemize}
 \end{frame}
@@ -268,6 +273,7 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
   \item   podporu pro ePUBová metadata 
     \begin{itemize}
   \item    obsah
+  \item    obálka
   \item    OPF soubor
 \end{itemize}
   \item   pro každou kapitolu nebo sekci je vytvořený samostatný soubor
@@ -277,14 +283,14 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 \begin{frame}
   \frametitle{make4ht} 
   \begin{itemize}
-    \item   https://github.com/michal-h21/make4ht
+    \item   \url{https://github.com/michal-h21/make4ht}
     \item build systém pro tex4ht, který řeší základní problémy:
     \item složité předávání parametrů pro htlatex a ostatní skripty
     \item pevně nastavené pořadí volání jednotlivých kroků kompilace
       \begin{itemize}
         \item TeX je vždy volán třikrát
       \end{itemize}
-    \item podpora pro nástroje jako je bibtex, xindy a podobně
+    \item podpora pro nástroje jako je \texttt{bibtex}, \texttt{xindy} a podobně
     \item  snadná změna parametrů konverze obrázků
     \item funkční kopírování souborů do výstupního adresáře
     \item zpracování výstupních souborů filtrovacími funkcemi v jazyce Lua, nebo externími
@@ -384,7 +390,8 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
   \frametitle{Někdy mohou nastat problémy}
   \begin{block}{Kompilace}
     \begin{verbatim}
-      tex4ebook -m draft -l fontspec.tex "new-accents"
+tex4ebook -m draft -l fontspec.tex 
+   "new-accents"
     \end{verbatim}
   \end{block}
   \begin{block}{A její výsledek}
@@ -425,6 +432,19 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
   \end{document}
 \end{verbatim}
 \end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Alternativní loader}
+\begin{verbatim}
+ \documentclass{article}
+ \usepackage{alternative4ht}
+ \altusepackage{fontspec}
+  \setmainfont{TeX Gyre Termes}
+  \newfontfamily\greekfont{Linux Libertine O}
+  ...
+\end{verbatim}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Základní konfigurace}
   \begin{verbatim}
@@ -523,16 +543,15 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{Pro vkládání souborů include4ht.sty}
-  \begin{verbatim}
-    \newcommand\AddFile[1]{\special{t4ht+@File: #1}}%
-    \newcommand\AddCss[1]{%
-      \AddFile{#1}%
-      \Configure{@HEAD}{%
-        \HCode{<link rel="stylesheet" type="text/css" 
-          href="#1" />}
-      }
-    }
-  \end{verbatim}
+\begin{verbatim}
+\newcommand\AddFile[1]{\special{t4ht+@File: #1}}%
+\newcommand\AddCss[1]{%
+\AddFile{#1}%
+\Configure{@HEAD}{%
+\HCode{<link rel="stylesheet" type="text/css" 
+href="#1" />}}
+}
+\end{verbatim}
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{Pro vkládání fontů addfont4ht.sty}
@@ -553,42 +572,42 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{Pro vkládání fontů addfont4ht.sty}
-  \begin{verbatim}
-    \newcommand\NormalFont[2]{
-      \AddFontFace{\CurrentFontFamily}{#1}{#2}
-      {font-weight: normal;font-style: normal;}}
-    \newcommand\BoldFont[2]{
-      \AddFontFace{\CurrentFontFamily}{#1}{#2}
-      {font-weight: bold;font-style: normal;}}
-    \newcommand\ItalicFont[2]{
-      \AddFontFace{\CurrentFontFamily}{#1}{#2}
-      {font-weight: normal;font-style: italic;}}
-  \end{verbatim}
+\begin{verbatim}
+\newcommand\NormalFont[2]{
+ \AddFontFace{\CurrentFontFamily}{#1}{#2}
+  {font-weight: normal;font-style: normal;}}
+\newcommand\BoldFont[2]{
+  \AddFontFace{\CurrentFontFamily}{#1}{#2}
+  {font-weight: bold;font-style: normal;}}
+\newcommand\ItalicFont[2]{
+  \AddFontFace{\CurrentFontFamily}{#1}{#2}
+  {font-weight: normal;font-style: italic;}}
+\end{verbatim}
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{A konfigurační soubor}
-  \begin{verbatim}
-    \RequirePackage{include4ht}
-    \RequirePackage{addfont4ht}
-    \Preamble{xhtml}
-    \AddCss{scale.css}
-    ...
-    \NormalFont{EBGaramond}{EBGaramond12-Regular.woff}
-    \BoldFont{EBGaramond}{EBGaramond12-Italic.woff}
-    \ItalicFont{EBGaramond}{EBGaramond12-Italic.woff}
-    \Configure{@HEAD}{\HCode{<style type='text/css' >
-        \Hnewline body{font-family:rmfamily, 
-          "EBGaramond", sans-serif;}\Hnewline
-        </style>}}
-    \EndPreamble
-  \end{verbatim}
+\begin{verbatim}
+\RequirePackage{include4ht}
+\RequirePackage{addfont4ht}
+\Preamble{xhtml}
+\AddCss{scale.css}
+...
+\NormalFont{EBGaramond}{EBGaramond12-Regular.woff}
+\BoldFont{EBGaramond}{EBGaramond12-Italic.woff}
+\ItalicFont{EBGaramond}{EBGaramond12-Italic.woff}
+\Configure{@HEAD}{\HCode{<style type='text/css' >
+    \Hnewline body{font-family:rmfamily, 
+      "EBGaramond", sans-serif;}\Hnewline
+    </style>}}
+\EndPreamble
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Musíme kompilovat do ePUB 3}
-  \begin{verbatim}
-    tex4ebook -f epub3 -c epub3.cfg -m draft basic.tex
-  \end{verbatim}
+\begin{verbatim}
+tex4ebook -f epub3 -c epub3.cfg -m draft basic.tex
+\end{verbatim}
 \end{frame}
 
 \begin{frame}
@@ -598,15 +617,15 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 
 \begin{frame}[fragile]
   \frametitle{Build soubor pro make4ht, pokus.mk4}
-  \begin{verbatim}
-    Make:add("biber","biber ${input}")
-    Make:htlatex {}
-    Make:biber {}
-    Make:htlatex {}
-    Make:image("png$",                                                          
-    "dvipng -bg Transparent -T tight -o ${output}"..
-    "-pp ${page} ${source}")
-  \end{verbatim}
+\begin{verbatim}
+Make:add("biber","biber ${input}")
+Make:htlatex {}
+Make:biber {}
+Make:htlatex {}
+Make:image("png$",                                                          
+"dvipng -bg Transparent -T tight -o ${output}"..
+"-pp ${page} ${source}")
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -660,7 +679,7 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 \end{frame}
 
 \begin{frame}
-  \frametitle{Pokročilé možnosti build souborů -- zpracování výstupních souborů}
+  \frametitle{Zpracování výstupních souborů}
   \begin{itemize}
     \item výstupní soubory můžeme zpracovat externími příkazy, nebo funkcemi v jazyce Lua
     \item efektivní zpracování umožňují filtry
@@ -684,44 +703,44 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 
 \begin{frame}[fragile]
   \frametitle{Normální výstup má samozřejmě chybnou diakritiku}
-  \begin{verbatim}
-    <p class="noindent">Co dělat v případě, že se 
-    <span class="ecbx-1000">n</span><span 
-    class="ecbx-1000">ám nel</span><span 
-    class="ecbx-1000">íb</span><span 
-    class="ecbx-1000">í v</span><span 
-    class="ecbx-1000">ýstup?</span>________________________
-    </p> 
-    <p class="indent">    Použijeme filtry!
-  \end{verbatim}
+\begin{verbatim}
+<p class="noindent">Co dělat v případě, že se 
+<span class="ecbx-1000">n</span><span 
+class="ecbx-1000">ám nel</span><span 
+class="ecbx-1000">íb</span><span 
+class="ecbx-1000">í v</span><span 
+class="ecbx-1000">ýstup?</span>________________________
+</p> 
+<p class="indent">    Použijeme filtry!
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Build soubor s filtry, pokus.mk4}
-  \begin{verbatim}
-    local filter = require "make4ht-filter"
-    local process = filter{"cleanspan", "hruletohr"}
-    Make:htlatex()
-    Make:htlatex()
-    Make:match("html$",process)
-    Make:match("html$",
-    "tidy -m -utf8 -asxhtml -q -i ${filename}")
-  \end{verbatim}
+\begin{verbatim}
+local filter = require "make4ht-filter"
+local process = filter{"cleanspan", "hruletohr"}
+Make:htlatex()
+Make:htlatex()
+Make:match("html$",process)
+Make:match("html$",
+"tidy -m -utf8 -asxhtml -q -i ${filename}")
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Vyčištěné HTML}
-  \begin{verbatim}
-    <body>
-    <p class="noindent">Co dělat v případě, že se 
-    <span class= "ecbx-1000">nám nelíbí výstup?
-    </span>
-    </p>
-    <hr class="hrule" />
+\begin{verbatim}
+<body>
+<p class="noindent">Co dělat v případě, že se 
+<span class= "ecbx-1000">nám nelíbí výstup?
+</span>
+</p>
+<hr class="hrule" />
 
-    <p class="indent">Použijeme filtry!</p>
-    </body>
-  \end{verbatim}
+<p class="indent">Použijeme filtry!</p>
+</body>
+\end{verbatim}
 \end{frame}
 
 \begin{frame}
@@ -753,112 +772,112 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 
 \begin{frame}[fragile]
   \frametitle{Řídící soubor pro učitele: teacher.tex}
-  \begin{verbatim}
-    \documentclass{article}
-    ...
-    \usepackage[teacher]{edupub}
-    \begin{document}
-    \include{text}
-  \end{document}
+\begin{verbatim}
+\documentclass{article}
+...
+\usepackage[teacher]{edupub}
+\begin{document}
+\include{text}
+\end{document}
 \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Řídící soubor pro učitele: teacher.tex}
-  \begin{verbatim}
-    \documentclass{article}
-    ...
-    \usepackage[]{edupub}
-    \begin{document}
-    \include{text}
-  \end{document}
+  \frametitle{Řídící soubor pro studenty: student.tex}
+\begin{verbatim}
+\documentclass{article}
+...
+\usepackage[]{edupub}
+\begin{document}
+\include{text}
+\end{document}
 \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{TeXový soubor text.tex}
-  \begin{verbatim}
-    \newcommand\odpoved[1]{\\ \teacherinfo{#1}}
-    \begin{enumerate}
-      \item Jak se jmenuje náš největší had?
-        \odpoved{Užovka stromová}
-    \end{enumerate}
-  \end{verbatim}
+\begin{verbatim}
+\newcommand\odpoved[1]{\\ \teacherinfo{#1}}
+\begin{enumerate}
+\item Jak se jmenuje náš největší had?
+\odpoved{Užovka stromová}
+\end{enumerate}
+\end{verbatim}
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{balíček edupub.sty}
-  \begin{verbatim}
-    \ProvidesPackage{edupub}
-    \RequirePackage{kvoptions}
-    \RequirePackage{etoolbox}
-    \newbool{teacher}
-    \boolfalse{teacher}
-    \newcommand\teacherinfo[1]{}
-    \DeclareVoidOption{teacher}{%
-      \renewcommand\teacherinfo[1]{%
-        \edupub@print@teacherinfo{##1}}
-      \booltrue{teacher}}
-    \newcommand\edupub@print@teacherinfo[1]{#1}
-    \ProcessKeyvalOptions*
-  \end{verbatim}
+\begin{verbatim}
+\ProvidesPackage{edupub}
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+\newbool{teacher}
+\boolfalse{teacher}
+\newcommand\teacherinfo[1]{}
+\DeclareVoidOption{teacher}{%
+  \renewcommand\teacherinfo[1]{%
+    \edupub@print@teacherinfo{##1}}
+  \booltrue{teacher}}
+\newcommand\edupub@print@teacherinfo[1]{#1}
+\ProcessKeyvalOptions*
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{konfigurace pro balíček edupub, edupub.4ht}
-  \begin{verbatim}
-    \ifbool{teacher}{%
-      \Configure{OpfMetadata}
-      {\HCode{<dc:type>teacher-edition</dc:type>}}
-    }{}%
-  \end{verbatim}
+\begin{verbatim}
+\ifbool{teacher}{%
+  \Configure{OpfMetadata}
+  {\HCode{<dc:type>teacher-edition</dc:type>}}
+}{}%
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{konfigurace pro balíček edupub, edupub.4ht}
-  \begin{verbatim}
-    \NewConfigure{teacherinfo}{2}
+\begin{verbatim}
+\NewConfigure{teacherinfo}{2}
 
-    \let\old:teacherinfo\edupub@print@teacherinfo
+\let\old:teacherinfo\edupub@print@teacherinfo
 
-    \renewcommand\edupub@print@teacherinfo[1]{
-      \a:teacherinfo
-      \old:teacherinfo{#1}
-      \b:teacherinfo
-    }
-    \Configure{teacherinfo}
-    {\HCode{<span epub:type="answer">}}
-    {\HCode{</span>}}
-  \end{verbatim}
+\renewcommand\edupub@print@teacherinfo[1]{
+  \a:teacherinfo
+  \old:teacherinfo{#1}
+  \b:teacherinfo
+}
+\Configure{teacherinfo}
+{\HCode{<span epub:type="answer">}}
+{\HCode{</span>}}
+\end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{A výsledek?}
-  \begin{block}{student}
-    \begin{verbatim}
-      <li   class="enumerate" id="x1-3x1">
-      Jak se jmenuje náš největší had?<br 
-      class="newline" /></li>
-    \end{verbatim}
-  \end{block}
-  \begin{block}{učitel}
-    \begin{verbatim}
-      <li    class="enumerate" id="x1-3x1">
-      Jak se jmenuje náš největší had?<br 
-      class="newline" /> 
-      <span epub:type="answer">Užovka stromová </span> 
-      </li>
-    \end{verbatim}
-  \end{block}
+\frametitle{A výsledek?}
+\begin{block}{student}
+\begin{verbatim}
+<li   class="enumerate" id="x1-3x1">
+Jak se jmenuje náš největší had?<br 
+class="newline" /></li>
+\end{verbatim}
+\end{block}
+\begin{block}{učitel}
+\begin{verbatim}
+<li    class="enumerate" id="x1-3x1">
+Jak se jmenuje náš největší had?<br 
+class="newline" /> 
+<span epub:type="answer">Užovka stromová </span> 
+</li>
+\end{verbatim}
+\end{block}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{To je vše}
-  \begin{block}{}
-    Děkuji za pozornost
-  \end{block}
+\frametitle{To je vše}
+\begin{block}{}
+Děkuji za pozornost
+\end{block}
 \end{frame}
 
 \end{document}
