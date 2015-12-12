@@ -372,36 +372,36 @@ htlatex jmenosouboru.tex "xhtml,charset=utf-8"
 
 \begin{frame}[fragile]
   \frametitle{Někdy mohou nastat problémy}
-  \begin{verbatim}
-    \documentclass{article}
-    \usepackage{fontspec}
-    %\usepackage[czech]{babel}
-    \title{Základní dokument v češtině}
-    \author{Michal Hoftich}
-    \begin{document}
-    \maketitle
+\begin{verbatim}
+\documentclass{article}
+\usepackage{fontspec}
+%\usepackage[czech]{babel}
+\title{Základní dokument v češtině}
+\author{Michal Hoftich}
+\begin{document}
+\maketitle
 
-    Příliš žluťoučký kůň úpěl ďábelské ódy
-  \end{document}
+Příliš žluťoučký kůň úpěl ďábelské ódy
+\end{document}
 \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Někdy mohou nastat problémy}
   \begin{block}{Kompilace}
-    \begin{verbatim}
+\begin{verbatim}
 tex4ebook -m draft -l fontspec.tex 
    "new-accents"
-    \end{verbatim}
+\end{verbatim}
   \end{block}
   \begin{block}{A její výsledek}
-    \begin{verbatim}
-      --- error --- Can't find/open file 
-      `"file:lmroman12-regular:script=latn;
-      +trep;+tlig;".tfm'
-      Make4ht: Fatal error. Command tex4ht 
-      returned exit code 256
-    \end{verbatim}
+\begin{verbatim}
+--- error --- Can't find/open file 
+`"file:lmroman12-regular:script=latn;
++trep;+tlig;".tfm'
+Make4ht: Fatal error. Command tex4ht 
+returned exit code 256
+\end{verbatim}
   \end{block}
 \end{frame}
 \begin{frame}
@@ -418,18 +418,17 @@ tex4ebook -m draft -l fontspec.tex
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{Detekce tex4ht v preamble}
-  \begin{verbatim}
-    \documentclass{article}
-    \ifdefined\HCode
-    \usepackage[T1]{fontenc}
-    \usepackage[utf8]{luainputenc}
-    \else
-    \usepackage{fontspec}
-    \fi
-    %\usepackage[czech]{babel}
-    \title{Základní dokument v češtině}
-    ...
-  \end{document}
+\begin{verbatim}
+ \documentclass{article}
+ \ifdefined\HCode
+ \usepackage[T1]{fontenc}
+ \usepackage[utf8]{luainputenc}
+ \else
+ \usepackage{fontspec}
+ \fi
+ %\usepackage[czech]{babel}
+ \title{Základní dokument v češtině}
+ ...
 \end{verbatim}
 \end{frame}
 
@@ -448,19 +447,19 @@ tex4ebook -m draft -l fontspec.tex
 \begin{frame}[fragile]
   \frametitle{Základní konfigurace}
   \begin{verbatim}
-    \documentclass{article}
-    ...
-    \usepackage{biblatex}
-    \addbibresource{xampl.bib}
-    ...
-    \tableofcontents
-    \section{Úvod}
-    Příliš žluťoučký kůň \textit{úpěl} 
-    \textbf{ďábelské ódy} \parencite{article-full}
-    \section{Další kapitola}
-    Nějaká matematika $\sqrt{a^{2} + b^{2}}$
-    \section{Literatura}
-    \printbibliography
+\documentclass{article}
+...
+\usepackage{biblatex}
+\addbibresource{xampl.bib}
+...
+\tableofcontents
+\section{Úvod}
+Příliš žluťoučký kůň \textit{úpěl} 
+\textbf{ďábelské ódy} \parencite{article-full}
+\section{Další kapitola}
+Nějaká matematika $\sqrt{a^{2} + b^{2}}$
+\section{Literatura}
+\printbibliography
   \end{verbatim}
 \end{frame}
 
@@ -468,13 +467,13 @@ tex4ebook -m draft -l fontspec.tex
   \frametitle{Pár problémů}
   \begin{block}{Chybné převedení diakritiky}
     \begin{verbatim}
-      <p class="noindent" >Příliš žluťoučký kůň <span 
-      class="ecti-1000">úp</span><span 
-      class="ecti-1000">ěl </span><span 
-      class="ecbx-1000">ď</span><span 
-      class="ecbx-1000">ábelsk</span><span 
-      class="ecbx-1000">é </span><span 
-      class="ecbx-1000">ódy </span>
+<p class="noindent" >Příliš žluťoučký kůň <span 
+class="ecti-1000">úp</span><span 
+class="ecti-1000">ěl </span><span 
+class="ecbx-1000">ď</span><span 
+class="ecbx-1000">ábelsk</span><span 
+class="ecbx-1000">é </span><span 
+class="ecbx-1000">ódy </span>
     \end{verbatim}
   \end{block}
 \end{frame}
@@ -485,47 +484,47 @@ tex4ebook -m draft -l fontspec.tex
     \item umožňují vkládání konfigurací pro háčky a CSS instrukce
     \item základní struktura
       \begin{verbatim}
-        % zde můžeme vkládat balíčky
-        \Preamble{xhtml,volby pro tex4ht.sty}
-        ...
-        \begin{document}
-        ...
-        \EndPreamble
+% zde můžeme vkládat balíčky
+\Preamble{xhtml,volby pro tex4ht.sty}
+...
+\begin{document}
+...
+\EndPreamble
       \end{verbatim}
   \end{itemize}
 \end{frame}
 \begin{frame}[fragile]
   \frametitle{Konfigurační soubor pro náš příklad}
   \begin{verbatim}
-    \Preamble{xhtml}
-    \Configure{textbf}{\NoFonts\HCode{<strong>}}
-    {\HCode{</strong>}\EndNoFonts}
-    \Configure{textit}{\NoFonts\HCode{<em>}}
-    {\HCode{</em>}\EndNoFonts}
-    \begin{document}
-    \EndPreamble
+\Preamble{xhtml}
+\Configure{textbf}{\NoFonts\HCode{<strong>}}
+{\HCode{</strong>}\EndNoFonts}
+\Configure{textit}{\NoFonts\HCode{<em>}}
+{\HCode{</em>}\EndNoFonts}
+\begin{document}
+\EndPreamble
   \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Diakritika je již v pořádku}
   \begin{verbatim}
-    <p class="noindent" >Příliš žluťoučký kůň 
-    <em>úpěl</em> <strong>ďábelské ódy</strong> 
+<p class="noindent" >Příliš žluťoučký kůň 
+<em>úpěl</em> <strong>ďábelské ódy</strong> 
   \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Můžeme přidat nějaké kaskádové styly}
   \begin{verbatim}
-    \Preamble{xhtml}
-    \Configure{textbf}{\NoFonts\HCode{<strong>}}
-    {\HCode{</strong>}\EndNoFonts}
-    \Configure{textit}{\NoFonts\HCode{<em>}}
-    {\HCode{</em>}\EndNoFonts}
-    \Css{h3{color:blue;}}
-    \begin{document}
-    \EndPreamble
+\Preamble{xhtml}
+\Configure{textbf}{\NoFonts\HCode{<strong>}}
+{\HCode{</strong>}\EndNoFonts}
+\Configure{textit}{\NoFonts\HCode{<em>}}
+{\HCode{</em>}\EndNoFonts}
+\Css{h3{color:blue;}}
+\begin{document}
+\EndPreamble
   \end{verbatim}
 \end{frame}
 \begin{frame}
@@ -556,18 +555,18 @@ href="#1" />}}
 \begin{frame}[fragile]
   \frametitle{Pro vkládání fontů addfont4ht.sty}
   \begin{verbatim}
-    \RequirePackage{include4ht}
-    \newcommand\AddFontFace[4]{%
-      \Css{@font-face {
-          font-family: #1;
-          src: local("#2"),
-          url('#3');
-          #4
-        }}
-      \AddFile{#3}}
-    \edef\CurrentFontFamily{rmfamily}
-    \newcommand\SetFontFamily[1]{
-      \edef\CurrentFontFamily{#1}}
+\RequirePackage{include4ht}
+\newcommand\AddFontFace[4]{%
+\Css{@font-face {
+  font-family: #1;
+  src: local("#2"),
+  url('#3');
+  #4
+}}
+\AddFile{#3}}
+\edef\CurrentFontFamily{rmfamily}
+\newcommand\SetFontFamily[1]{%
+\edef\CurrentFontFamily{#1}}
   \end{verbatim}
 \end{frame}
 \begin{frame}[fragile]
@@ -631,8 +630,8 @@ Make:image("png$",
 \begin{frame}[fragile]
   \frametitle{Přidáme volbu pro build soubor}
   \begin{verbatim}
-    tex4ebook -f epub3 -c epub3.cfg -m draft 
-    -e pokus.mk4 basic.tex
+tex4ebook -f epub3 -c epub3.cfg -m draft 
+ -e pokus.mk4 basic.tex
   \end{verbatim}
 \end{frame}
 
@@ -647,8 +646,8 @@ Make:image("png$",
 \begin{frame}[fragile]
   \frametitle{Jak nastavit mathml?}
   \begin{verbatim}
-    tex4ebook -c epub.cfg -f epub3 -m draft 
-    -e pokus.mk4 basic mathml
+tex4ebook -c epub.cfg -f epub3 -m draft 
+ -e pokus.mk4 basic mathml
   \end{verbatim}
 \end{frame}
 
@@ -689,14 +688,14 @@ Make:image("png$",
 \begin{frame}[fragile]
   \frametitle{Příklad pro využití filtrů}
   \begin{verbatim}
-    \documentclass{article}
-    ...
-    \begin{document}
-    Co dělat v případě, že se 
-    {\bfseries nám nelíbí výstup?}
-    \hrule
+\documentclass{article}
+...
+\begin{document}
+Co dělat v případě, že se 
+{\bfseries nám nelíbí výstup?}
+\hrule
 
-    Použijeme filtry!
+Použijeme filtry!
   \end{document}
 \end{verbatim}
 \end{frame}
